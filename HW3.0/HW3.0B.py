@@ -21,7 +21,7 @@ tol=10**-10			#EXIT AFTER CHANGE IN F IS LESS THAN THIS
 alpha=0.5  			#EXPONENTIAL DECAY FACTOR FOR MOMENTUM ALGO
 algo='MOM'
 max_rand_wb = 1.0   #MAX FOR A RANDOM INITIAL GUESS
-GAMMA_L1 = 0.001    #L1 REGULARIZATION CONSTANT 
+GAMMA_L1 = 0        #L1 REGULARIZATION CONSTANT 
 GAMMA_L2 = 0.0001   #L2 REGULARIZATION CONSTANT 
 
 model_type="ANN";  LR=0.01  #LEARNING RATE 
@@ -85,6 +85,7 @@ X=np.array(xtmp); Y=np.array(ytmp)
 
 if (model_type == "ANN"):
     NFIT = 0
+    layers[0] = X.shape[1] # set the first layer as the number of inputs
     for i in range(1,len(layers)):
         NFIT = NFIT + layers[i-1]*layers[i]+layers[i]
 else:
@@ -176,10 +177,13 @@ def predict(p):
 #LOSS FUNCTION
 #------------------------
 def loss(p,index_2_use):
-	errors=model(X[index_2_use],p)-Y[index_2_use]  #VECTOR OF ERRORS
-	training_loss=np.mean(errors**2.0)				#MSE
-	return training_loss
-
+    P = np.array(p)     #make sure p is in numpy array format
+    errors=model(X[index_2_use],p)-Y[index_2_use]
+    training_loss=np.mean(errors**2.0) + GAMMA_L1*(sum(abs(p))) + GAMMA_L2*(sum(p*p))
+    return training_loss
+                                                   
+                                                   
+                                                   
 #------------------------
 #MINIMIZER FUNCTION
 #------------------------
