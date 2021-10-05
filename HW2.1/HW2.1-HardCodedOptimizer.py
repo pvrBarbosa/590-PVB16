@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import json
-#from   scipy.optimize import minimize
+from   scipy.optimize import minimize
 
 """
 ###############################################################################
@@ -35,9 +35,9 @@ DATA_KEYS=['x','is_adult','y']
 OPT_ALGO='BFGS'
 
 #UNCOMMENT FOR VARIOUS MODEL CHOICES (ONE AT A TIME)
-model_type="logistic"; NFIT=4; xcol=1; ycol=2;
+# model_type="logistic"; NFIT=4; xcol=1; ycol=2;
 # model_type="linear";   NFIT=2; xcol=1; ycol=2; 
-# model_type="logistic";   NFIT=4; xcol=2; ycol=0;
+model_type="logistic";   NFIT=4; xcol=2; ycol=0;
 
 #READ FILE
 with open(INPUT_FILE) as f:
@@ -202,11 +202,12 @@ def optimizer(f, algo="GD", LR=0.0001, method="batch", n_batches=2, decay_fact=0
 ##############################################################################
 
 #TRAIN MODEL USING SCIPY MINIMIZ 
-#res = minimize(loss, po, method=OPT_ALGO, tol=1e-15);  popt1=res.x
-#print("OPTIMAL PARAM:",popt1)
+res = minimize(loss, po, method=OPT_ALGO, tol=1e-15);  popt1=res.x
+print("OPTIMAL PARAM:",popt1)
 
 popt = optimizer(loss, algo=algo, LR=LR, method=method, n_batches=n_batches, decay_fact=decay_fact, tmax=tmax)
 print("OPTIMAL PARAM:",popt)
+print(popt1)
 
 
 
